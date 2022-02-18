@@ -57,16 +57,16 @@ registerForEvent("onInit", function()
 
     Observe("gameuiMenuItemListGameController", "AddMenuItem", function (this, _, spawnEvent) -- Add "Mods" menu button
         if spawnEvent.value == "OnSwitchToDlc" then
-            this:AddMenuItem("Mods", "OnSwitchToSettings")
+            this:AddMenuItem(nativeSettings.Localization.GetMenuName(), "OnSwitchToSettings")
         end
     end)
 
     Observe("PauseMenuGameController", "OnMenuItemActivated", function (_, _, target) -- Check if activated button is the custom mods button
-        nativeSettings.fromMods = target:GetData().label == "Mods"
+        nativeSettings.fromMods = target:GetData().label == nativeSettings.Localization.GetMenuName()
     end)
 
     Observe("gameuiMenuItemListGameController", "OnMenuItemActivated", function (_, _, target) -- Check if activated button is the custom mods button
-        nativeSettings.fromMods = target:GetData().label == "Mods"
+        nativeSettings.fromMods = target:GetData().label == nativeSettings.Localization.GetMenuName()
     end)
 
     Observe("SettingsMainGameController", "RequestClose", function () -- Handle mod settings close
@@ -123,7 +123,9 @@ registerForEvent("onInit", function()
                 tabs = tabs + 1
             end
             if tabs == 0 then
-                nativeSettings.addTab("noMod", "No mods using NativeSettings installed!") -- Add something when there are no settings, to make it not bug out
+                nativeSettings.addTab('noMod', nativeSettings.Localization.GetNoModsName()) -- Add something when there are no settings, to make it not bug out
+            elseif tabs == 1 and nativeSettings.data['noMod'] then
+                nativeSettings.addTab('noMod', nativeSettings.Localization.GetNoModsName())
             end
 
             this.data = {}
